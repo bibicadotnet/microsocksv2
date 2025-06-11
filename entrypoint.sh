@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Redirect all output to /dev/null
+exec >/dev/null 2>&1
+
 # Function to find the correct network interface
 get_interface() {
     # Try multiple methods to find the correct interface
@@ -42,12 +45,7 @@ setup_bandwidth() {
     local interface
     interface=$(get_interface)
     
-    if [ -z "$interface" ]; then
-        echo "Error: Could not determine network interface"
-        return 1
-    fi
-    
-    echo "Setting bandwidth limits on interface $interface..."
+    [ -z "$interface" ] && return 1
     
     # Load ifb module
     modprobe ifb 2>/dev/null || true
@@ -74,7 +72,6 @@ setup_bandwidth() {
         tc qdisc add dev ifb0 root handle 1: htb default 10
         tc class add dev ifb0 parent 1: classid 1:1 htb rate ${download_rate}mbit ceil ${download_rate}mbit
         tc filter add dev ifb0 parent 1: protocol ip prio 1 u32 match ip src 0.0.0.0/0 flowid 1:1
-        echo "Download limit set to ${download_rate}mbit"
     fi
     
     # Setup upload limit (egress)
@@ -83,13 +80,11 @@ setup_bandwidth() {
         tc qdisc add dev $interface root handle 2: htb default 10
         tc class add dev $interface parent 2: classid 2:1 htb rate ${upload_rate}mbit ceil ${upload_rate}mbit
         tc filter add dev $interface parent 2: protocol ip prio 1 u32 match ip dst 0.0.0.0/0 flowid 2:1
-        echo "Upload limit set to ${upload_rate}mbit"
     fi
 }
 
 # Cleanup function
 cleanup() {
-    echo "Cleaning up bandwidth controls..."
     local interface
     interface=$(get_interface 2>/dev/null) || interface=""
     
@@ -115,5 +110,4 @@ CMD="/usr/bin/microsocks"
 [ -n "$USERNAME" ] && [ -n "$PASSWORD" ] && CMD="$CMD -u $USERNAME -P $PASSWORD"
 CMD="$CMD -p ${PORT:-1080}"
 
-echo "Starting: $CMD"
 exec $CMD
