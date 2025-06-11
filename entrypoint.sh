@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 setup_bandwidth() {
     local interface=$(ip route | awk '/default/ {print $5; exit}')
