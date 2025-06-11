@@ -1,4 +1,4 @@
-#!/bin/bashAdd commentMore actions
+#!/bin/bash
 
 # Function to setup bandwidth limits
 setup_bandwidth() {
