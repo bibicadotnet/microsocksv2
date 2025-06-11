@@ -16,7 +16,6 @@ services:
       - "10001:1080"
     cap_add:
       - NET_ADMIN
-      - SYS_MODULE
     environment:
       - PORT=1080
       - AUTH_ONCE=true
@@ -44,7 +43,6 @@ services:
       - "10001:1080"
     cap_add:
       - NET_ADMIN
-      - SYS_MODULE
     environment:
       - PORT=1080
       - AUTH_ONCE=true
@@ -64,7 +62,6 @@ services:
       - "10002:1080"
     cap_add:
       - NET_ADMIN
-      - SYS_MODULE
     environment:
       - PORT=1080
       - AUTH_ONCE=true
@@ -84,7 +81,6 @@ services:
       - "10003:1080"
     cap_add:
       - NET_ADMIN
-      - SYS_MODULE
     environment:
       - PORT=1080
       - AUTH_ONCE=true
