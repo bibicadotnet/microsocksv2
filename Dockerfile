@@ -1,4 +1,4 @@
-# Stage 1: Build static binaryAdd commentMore actions
+# Stage 1: Build static binary
 FROM alpine:3.18 AS builder
 RUN apk --no-cache add make gcc linux-headers git musl-dev && \
     git clone --depth 1 https://github.com/rofl0r/microsocks /opt/microsocks && \
