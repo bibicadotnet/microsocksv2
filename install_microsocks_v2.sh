@@ -108,6 +108,8 @@ while true; do
 done
 [ -n "$UPLOAD_RATE" ] && UPLOAD_RATE="${UPLOAD_RATE}Mbps"
 
+echo -e "\n${YELLOW}Preparing proxy container and configuration files...${NC}"
+
 # Create working directory
 WORKDIR="$HOME/microsocks_${ACCOUNT_NAME}"
 mkdir -p "$WORKDIR"
@@ -162,16 +164,14 @@ EOF
 
 # Container management
 docker compose down >/dev/null 2>&1
-docker rm -f microsocks_${ACCOUNT_NAME} >/dev/null 2>&1
+docker compose pull >/dev/null 2>&1
 
 echo -e "\n${YELLOW}Starting MicroSocks service...${NC}"
-docker compose up -d --build --remove-orphans --force-recreate >/dev/null 2>&1
-
-# Wait for service to start
-sleep 1
+docker compose up -d --remove-orphans --force-recreate >/dev/null 2>&1
 
 # Check if SOCKS5 proxy is working
 echo -e "\n${YELLOW}Validating SOCKS5 proxy connection...${NC}"
+sleep 1
 PROXY_URL="socks5h://$ACCOUNT_NAME:$PROXY_PASSWORD@$IP:$HOST_PORT"
 CHECK_IP=$(curl -4 -s --connect-timeout 10 --max-time 15 --proxy $PROXY_URL https://ifconfig.me 2>/dev/null)
 
