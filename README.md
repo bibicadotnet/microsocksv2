@@ -2,6 +2,8 @@
 
 MicroSocks v2 là phiên bản nâng cấp của [microsocks](https://github.com/rofl0r/microsocks), được tích hợp sẵn công cụ `tc` (Traffic Control) giúp giới hạn **tốc độ upload** và **download** trực tiếp trong container.
 
+- Về mặt lý thuyết bất cứ socks5 hay mọi ứng dụng chạy qua Docker, đều có thể dùng cùng phương pháp này để quản lý băng thông ra vào, thực tế `tc` quản lý băng thông của toàn bộ container, chứ không phải thông qua tài khoản, dùng tên MicroSocks v2 đơn giản là vì tích hợp vào MicroSocks 😅
+
 Giải pháp này phù hợp khi bạn:
 
 - Muốn cấp SOCKS5 riêng biệt cho từng người dùng qua Docker.
