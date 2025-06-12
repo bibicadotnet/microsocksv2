@@ -10,11 +10,4 @@ RUN apk add --no-cache iproute2 bash
 COPY --from=builder /opt/microsocks/microsocks /usr/bin/microsocks
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-ENV AUTH_ONCE \
-    QUIET \
-    USERNAME \
-    PASSWORD \
-    PORT \
-    DOWNLOAD_RATE \
-    UPLOAD_RATE
 ENTRYPOINT ["/entrypoint.sh"]
