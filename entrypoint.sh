@@ -1,9 +1,7 @@
 #!/bin/bash
 set -e
-# Redirect all output to /dev/null
 exec >/dev/null 2>&1
 
-# Kiểm tra eth0 tồn tại trước khi tiếp tục
 ip link show eth0 >/dev/null 2>&1 || { echo "eth0 not found" >&2; exit 1; }
 
 get_params() {
@@ -19,23 +17,18 @@ get_params() {
     }'
 }
 
-# Thiết lập giới hạn băng thông
 setup_bandwidth() {
     local interface="eth0"
-    
-    # Dọn sạch qdisc và ifb cũ nếu có
     tc qdisc del dev $interface root 2>/dev/null || true
     tc qdisc del dev $interface ingress 2>/dev/null || true
     tc qdisc del dev ifb0 root 2>/dev/null || true
     ip link del ifb0 2>/dev/null || true
 
-    # Upload (egress)
     if [ -n "$UPLOAD_RATE" ]; then
         local rate=${UPLOAD_RATE/Mbps/} params=$(get_params "$rate")
         tc qdisc add dev $interface root tbf rate ${rate}mbit burst ${params%% *} latency ${params##* }
     fi
 
-    # Download (ingress) qua ifb
     if [ -n "$DOWNLOAD_RATE" ]; then
         local rate=${DOWNLOAD_RATE/Mbps/} params=$(get_params "$rate")
         modprobe ifb 2>/dev/null || true
@@ -47,7 +40,6 @@ setup_bandwidth() {
     fi
 }
 
-# Dọn dẹp khi container thoát
 cleanup() {
     local interface="eth0"
     tc qdisc del dev $interface root 2>/dev/null || true
@@ -58,10 +50,8 @@ cleanup() {
 
 trap cleanup EXIT INT TERM
 
-# Áp dụng giới hạn nếu có yêu cầu
 { [ -n "$DOWNLOAD_RATE" ] || [ -n "$UPLOAD_RATE" ]; } && setup_bandwidth
 
-# Khởi chạy microsocks
 exec /usr/bin/microsocks \
     ${AUTH_ONCE:+-1} \
     ${QUIET:+-q} \
