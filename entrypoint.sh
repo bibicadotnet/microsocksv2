@@ -110,4 +110,4 @@ CMD="/usr/bin/microsocks"
 [ -n "$USERNAME" ] && [ -n "$PASSWORD" ] && CMD="$CMD -u $USERNAME -P $PASSWORD"
 CMD="$CMD -p ${PORT:-1080}"
 
-exec $CMD
+exec su -s /bin/sh nobody -c "$CMD"
