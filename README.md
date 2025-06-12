@@ -1,4 +1,4 @@
-# 🧦 MicroSocks v2 — SOCKS5 proxy with bandwidth control
+# MicroSocks v2 — SOCKS5 proxy with bandwidth control
 
 **MicroSocks v2** là phiên bản nâng cấp của [microsocks](https://github.com/rofl0r/microsocks), được tích hợp sẵn công cụ `tc` (Traffic Control) giúp giới hạn **tốc độ upload** và **download** trực tiếp trong container.
 
